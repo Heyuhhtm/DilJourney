@@ -39,15 +39,20 @@ const corsOptions = {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // In production, you might want to restrict this. For now, allowing all onRender or Vercel or any to prevent live blocks.
-    // If it's a specific frontend url or local dev:
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'production') {
+    // Check if origin is in allowed list
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else if (process.env.NODE_ENV === 'production') {
+      // In production, allow the request to proceed (preflight will be handled)
       callback(null, true);
     } else {
-      callback(null, true); // Fallback to allowing all to fix deployment issues temporarily. User should restrict this later.
+      // In development, also allow
+      callback(null, true);
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
 
