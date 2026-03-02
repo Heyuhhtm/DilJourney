@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: diljourney-frontend
+    runtime: static
+    buildCommand: echo "No build needed"
+    staticPublishPath: ./MOODIE
+    routes:
+      - path: "/*"
+        destination: /index.html
+
+  - type: web
+    name: diljourney-backend
+    runtime: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://heyuhhtm:cody01@cluster0.nvsmwe6.mongodb.net/?appName=Cluster0
+      - key: JWT_SECRET
+        value: d3f8a92c1e7b4f9a6c2d5e8f1a4b7c0d9e2f5a8b1c4e7d0a3f6b9c2e5a8d1
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: PORT
+        value: "10000"
+      - key: CLIENT_URL
+        value: https://diljourney-frontend.onrender.com
+      - key: NODE_ENV
+        value: production
